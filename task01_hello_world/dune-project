@@ -1,0 +1,28 @@
+(lang dune 3.20)
+
+(name task01_hello_world)
+
+(generate_opam_files true)
+
+(source
+ (github username/reponame))
+
+(authors "Author Name <author@example.com>")
+
+(maintainers "Maintainer Name <maintainer@example.com>")
+
+(license LICENSE)
+
+(documentation https://url/to/documentation)
+
+(package
+ (name task01_hello_world)
+ (synopsis "Task 1: Hello World and Basic I/O")
+ (description "Learn OCaml basics: let bindings, immutability, and I/O operations")
+ (depends 
+  ocaml
+  (alcotest :with-test))
+ (tags
+  ("ocaml" "learning" "tutorial" "io")))
+
+; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html

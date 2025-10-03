@@ -1,0 +1,4 @@
+[33mASSERT[0m should greet 'Alice' correctly
+[33mASSERT[0m should greet 'Bob' correctly
+[33mASSERT[0m should greet 'OCaml' correctly
+[33mASSERT[0m should greet '' correctly

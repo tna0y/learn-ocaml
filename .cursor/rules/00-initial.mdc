@@ -1,0 +1,391 @@
+---
+alwaysApply: true
+---
+# 📘 Technical Specification for AI Agent (Educational Focus)
+
+**Project:** Personalized OCaml Learning Repository for Compiler Development Preparation
+
+---
+
+## 🎯 Context
+
+This repository is being built **exclusively for me**, as my personal educational course. The purpose is not to simply generate finished tasks with ready-made solutions, but to create a **learning rhythm** that teaches me new things step by step. Each task should read like an **educational resource**, not like a changelog of what was done. I must feel that the agent is teaching me directly, guiding me, and preparing me to write my own solutions.
+
+Key principles:
+
+* **This is a personal course** — it should feel like it’s made for me, not generic.
+* **No solutions in the materials** — I must solve everything myself.
+* **Theory first** — every README is like a mini self-contained textbook chapter.
+* **Tasks as exercises** — they should challenge me to implement what I just learned.
+* **Project templates + tests included**, but the implementation files must be empty, waiting for me to fill them in.
+* **README rhythm** — explanations, context, idioms, analogies → then the task → then instructions on how to run tests.
+
+---
+
+## 🔑 Requirements
+
+1. **README for each task = educational content**
+
+   * Explains OCaml syntax and idioms relevant to the task.
+   * Uses analogies with C, Python, Rust, Haskell to help associative understanding.
+   * No algorithmic theory unless it is about **OCaml idioms**.
+   * Must be self-contained: theory, instructions, test running.
+   * Must feel like it’s teaching me, not just listing steps.
+
+2. **Each task is a separate directory with:**
+
+   * `README.md` — theory, explanations, task description, instructions.
+   * Initialized OCaml project (via dune).
+   * Tests included (`alcotest` or similar).
+   * **Implementation files empty** — I must write the code myself.
+
+3. **Root repository `README.md`** — contains the overall learning plan.
+
+---
+
+## 📂 Repository Structure
+
+```
+├── task01_hello_world/
+│   ├── README.md   # self-contained educational guide + task
+│   ├── dune-project
+│   ├── bin/main.ml   # empty file to implement
+│   └── test/test.ml  # contains tests
+│
+├── task02_recursion/
+│   └── ...
+│
+...
+├── task14_wasm_compiler/
+│   └── ...
+```
+
+---
+
+## 🧭 Course Rhythm
+
+Instead of just enumerating requirements, each task must:
+
+1. Start with **theory** — explain syntax, idioms, and ideas relevant to this task.
+2. Provide **analogies** — compare OCaml constructs to other languages I know.
+3. Clearly state **the exercise** — what I must implement myself.
+4. Include **instructions** — how to build, run tests, and check my solution.
+5. Leave **implementation files empty**, so I actually do the coding.
+
+---
+
+## 🚫 What to Avoid
+
+* Do not provide ready-made solutions in `README.md` or `main.ml`.
+* Do not describe tasks as if they were already completed.
+* Do not break the rhythm with excessive detail about unrelated topics.
+
+---
+
+## ✅ What to Provide
+
+* Educational explanations tailored to me.
+* Self-contained README for each task.
+* Templates + tests, but no code.
+* Step-by-step progression from basics → idioms → AST → transformations → VM → WASM.
+
+---
+
+## Why This Matters
+
+This is my attempt, in the era of AI, to create a **personalized, educational course** that challenges me to learn OCaml in a compiler-building context. The repository must feel like a **guide written for me by my own assistant**, not like a generic task dump.
+
+Every README should motivate, teach, and then push me to implement — keeping the rhythm of learning strong.
+
+---
+
+# 📘 Original Technical Specification (Translated)
+
+**Project:** OCaml Learning Repository for Compiler Development Preparation
+
+---
+
+## 🔑 Key Requirements
+
+1. **Each task's README must include all necessary OCaml theory so the student can complete the task without external sources.**
+
+   * Theory explains OCaml syntax and idioms used in the task.
+   * Analogies with other languages (C, Python, Rust, Haskell) are allowed to build associative links.
+   * No need to explain general algorithmic theory (e.g., what binary trees are) — only what concerns **OCaml**.
+   * The README must be self-contained: from project setup to running tests.
+
+2. Each task = separate directory with:
+
+   * `README.md` (theory + task + instructions),
+   * initialized OCaml project (via dune),
+   * tests (`alcotest` or built-in interpreter).
+
+3. Repository root must contain `README.md` with overall learning plan.
+
+---
+
+## 📂 Repository Structure
+
+```
+│
+├── task01_hello_world/
+│   ├── README.md
+│   ├── dune-project
+│   ├── bin/main.ml
+│   └── test/test.ml
+│
+├── task02_recursion/
+│   └── ...
+│
+...
+├── task11_dependencies/
+│   └── ...
+```
+
+# Course Plan (14 Tasks)
+
+## Module A — OCaml Basics and Idioms
+
+### 1) Hello, World! + Build and I/O
+
+**Goal:** minimal entry into the language and tools.
+**Idioms:** `let`, immutability by default, basic I/O.
+**Task:**
+
+* Program prints `"Hello, World!"`, then reads a name and prints `Hello, <name>!`.
+  **Tests:** check stdout (I/O).
+  **README should explain:** basic syntax, running with `dune exec`, difference from `printf` in C and `print` in Python, project file locations.
+
+---
+
+### 2) Functions and Recursion (including tail recursion)
+
+**Goal:** confidently write recursive functions.
+**Idioms:** `let rec`, tail recursion, accumulators.
+**Task:**
+
+* `fact : int -> int` (normal and tail-recursive),
+* `fib : int -> int` (tail-recursive).
+  **Tests:** unit tests.
+  **README:** difference between normal and tail recursion; comparison with Python/Rust; the accumulator pattern.
+
+---
+
+### 3) Pattern Matching and Lists: `map`, `filter`, `fold_left`
+
+**Goal:** master the "engine" of FP style.
+**Idioms:** `match`, list recursion, "no loops", operator `|>`.
+**Task:**
+
+* Implement `map`, `filter`, `fold_left` manually.
+  **Tests:** unit tests.
+  **README:** explanation of `match ... with`, tail-recursive `fold_left`, comparison with Rust’s `iter()` and Python list comprehensions.
+
+---
+
+### 4) ADT and Interfaces (`.mli`): Binary Search Tree
+
+**Goal:** algebraic types and interface files.
+**Idioms:** `type`, variants, recursive types; `.ml/.mli` separation.
+**Task:**
+
+* BST type with operations `insert`, `find`.
+* Write `.mli` signature.
+  **Tests:** unit tests.
+  **README:** how to write `.mli`, benefits of explicit interfaces; analogies with interfaces/modules in other languages.
+
+---
+
+### 5) Option/Result and Idiomatic Error Handling
+
+**Goal:** move away from exceptions by default.
+**Idioms:** `option`, `result`, pattern matching, explicit errors without exceptions.
+**Task:**
+
+* `parse_int : string -> int option`,
+* `safe_div : int -> int -> (int, string) result`.
+  **Tests:** unit tests.
+  **README:** error handling patterns; analogies with `Option`/`Result` in Rust, `Maybe`/`Either` in Haskell.
+
+---
+
+### 6) Modules and Functors: `Rational` + Integer Abstraction
+
+**Goal:** feel the power of the module system.
+**Idioms:** modules, signatures, functors for parameterizing behavior.
+**Task:**
+
+* `Rational` module with `add/mul/simplify`.
+* Functor `MakeRational(IntLike)` where `IntLike` defines `gcd`/`compare` (minimal).
+  **Tests:** unit tests.
+  **README:** what functors are in OCaml (like generics + typeclass-ish), how to use them.
+
+---
+
+## Module B — AST, Parsing, Pretty-Printing
+
+### 7) Arithmetic AST + Pretty-Print
+
+**Goal:** treat AST as the source of truth.
+**Idioms:** recursive traversal, `Format` module, operator `@$`.
+**Task:**
+
+* Type:
+
+  ```ocaml
+  type expr = Int of int | Add of expr * expr | Sub of expr * expr | Mul of expr * expr | Div of expr * expr
+  ```
+* `eval : expr -> int`,
+* `pp_expr : expr -> string` (pretty-printer using `Format`).
+  **Tests:** unit tests.
+  **README:** basics of `Format`, difference from string concatenation, techniques for clean output.
+
+---
+
+### 8) Parser (Recursive Descent) Without Dependencies
+
+**Goal:** strong skill in mapping strings to AST.
+**Idioms:** pure functions, explicit errors via `result`.
+**Task:**
+
+* Parser for expressions like `"1 + 2 * (3 - 4)"` → `expr`, with precedence and parentheses.
+  **Tests:** unit tests.
+  **README:** breaking grammar into functions (`expr/term/factor`), error reporting via `result` (simplified positions).
+
+---
+
+### 9) Variables and `let ... in ...` + Environments
+
+**Goal:** add binding and scoping.
+**Idioms:** immutable associative structures (start with list of pairs), "create new environment, don’t mutate".
+**Task:**
+
+* Extend `expr` with `Var of string`, `Let of string * expr * expr`.
+* `eval : env -> expr -> int` (`env = (string * int) list`).
+  **Tests:** unit tests.
+  **README:** environment model, difference from mutable dictionaries; variable shadowing.
+
+---
+
+## Module C — AST Transformations (Tree Thinking)
+
+### 10) Constant Folding and Simple Algebraic Simplifications
+
+**Goal:** learn rewriting trees.
+**Idioms:** pure rewriters (`expr -> expr`), law of immutability.
+**Task:**
+
+* `const_fold : expr -> expr`, which:
+
+  * folds constants (`2 + 3 * 4` → `14`),
+  * simplifies neutral elements (`x + 0 → x`, `x * 1 → x`, `x * 0 → 0`, etc.).
+    **Tests:** unit tests.
+    **README:** rewriting techniques, structural recursion, invariants; connection to compiler optimizations.
+
+---
+
+### 11) Alpha-Renaming and Shadow Elimination
+
+**Goal:** handle names correctly.
+**Idioms:** fresh name generation, passes, avoiding collisions.
+**Task:**
+
+* `alpha_rename : expr -> expr` — rename variables to eliminate shadowing (e.g., `let x = 1 in let x = x + 1 in x` → unique names).
+  **Tests:** unit tests checking evaluation equivalence before/after `alpha_rename`.
+  **README:** scoping, shadowing, importance for later stages (e.g., closures).
+
+---
+
+## Module D — Intermediate VM → Bridge to WASM
+
+### 12) Toy Stack Machine (Built-In) and Compilation to It
+
+**Goal:** smooth transition to real VM.
+**Idioms:** separate "what we generate" vs. "how we execute"; tests through interpreter.
+**Instructions:**
+
+* Instructions: `PUSH n | ADD | SUB | MUL | DIV | LOAD x | STORE x`.
+
+* VM interpreter is provided in project (OCaml), called in tests.
+  **Task:**
+
+* `compile_toy : expr -> instr list` — compile extended `expr` (with `let`/`var`) to VM code, where `LOAD/STORE` use names (or indexed env).
+  **Tests:** compile → run via interpreter → compare with `eval`.
+  **README:** how stack execution works; step-by-step execution; link to WASM.
+
+---
+
+## Module E — Ecosystem and Quality
+
+### 13) Ecosystem I: Dependencies, Tests, Property-Based, Formatting
+
+**Goal:** experience the real toolchain.
+**Idioms:** reproducible environment, autoformatting, tests as specification.
+**Task:**
+
+* Add external packages via `opam`/`dune`:
+
+  * `alcotest` (or `ounit`) — unit tests,
+  * `qcheck` — property-based testing,
+  * `ocamlformat` — autoformat.
+* Write **property tests** for `const_fold` (e.g., `eval (const_fold e) == eval e` on random expressions).
+  **Tests:** property + unit tests.
+  **README:** configuring `opam switch`, `dune` dependencies, running tests (`dune test`), autoformatting (`dune fmt` or `ocamlformat`).
+
+---
+
+### 14) Real VM: Compiler to WebAssembly (`.wat`) + Execution
+
+**Goal:** target a real VM.
+**Idioms:** pure text generation of `.wat`, backend module abstraction.
+**Minimal WASM spec (`i32` only):**
+
+* Instructions: `i32.const n`, `i32.add`, `i32.sub`, `i32.mul`, `i32.div_s`.
+
+* Local vars: `(local $x i32)`, `local.set $x`, `local.get $x`.
+
+* One exported function `(export "main") (result i32)`.
+  **Task:**
+
+* `compile_wasm : expr -> string` — generate `.wat` text for `expr` with `let`/`var` via locals (each binding = `(local ...)`, assignment = `local.set`, read = `local.get`).
+
+* Tests execute `.wat` via embedded runtime (e.g., `owi`) **inside** tests.
+  **Tests:** compare execution results with `eval` and/or toy VM execution.
+  **README:** WASM stack model basics, minimal `.wat` syntax, example execution; running tests.
+
+---
+
+## General Requirements for All Tasks
+
+* **README in each task = self-contained tutorial for that OCaml slice**: syntax, idioms, API mini-reference, cross-language analogies.
+* **Tests where applicable** (unit/property for functions, I/O for task 1).
+* README instructions for running:
+
+  ```bash
+  dune build
+  dune test
+  dune exec <project_name> [args]  # if required
+  ```
+* Codebase organized via `dune`; `.mli` files encouraged.
+* Compilation tasks: tests compare execution results with reference (`eval`) for correctness.
+
+---
+
+## Why This Works for You
+
+* **No compiler theory intros** (you already know it) — straight into OCaml practice with proper functional mindset.
+* **Idioms integrated into every step**: recursion, `match`, modules, functors, `Format`, `.mli`, property tests, autoformat.
+* **Smooth bridge to real VM**: interpreter → toy VM → real WASM with minimal spec.
+* **Ecosystem** as a practical step: dependencies, formatting, property tests — like in real projects.
+
+---
+
+## Mini-Tips for README Authors (must cover)
+
+* OCaml vs. C-like languages: indentation ≠ blocks, pattern matching, immutability, functions as first-class, signatures & modules.
+* Patterns: tail recursion, `option/result` instead of exceptions, `match` everywhere.
+* Project structure with `dune`, how to read/write `.mli`, how to run tests and what they check.
+* For transformations — invariants and equivalence `eval (transform e) == eval e`.
+* For VM — step-by-step code execution example; for WASM — short `.wat` listing with comments.
+
+---

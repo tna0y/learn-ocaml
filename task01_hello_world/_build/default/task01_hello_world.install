@@ -1,0 +1,11 @@
+lib: [
+  "_build/install/default/lib/task01_hello_world/META"
+  "_build/install/default/lib/task01_hello_world/dune-package"
+  "_build/install/default/lib/task01_hello_world/opam"
+]
+bin: [
+  "_build/install/default/bin/task01_hello_world"
+]
+doc: [
+  "_build/install/default/doc/task01_hello_world/README.md"
+]
