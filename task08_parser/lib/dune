@@ -1,0 +1,3 @@
+(library
+ (name parser)
+ (public_name task08_parser.parser))

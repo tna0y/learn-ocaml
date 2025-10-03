@@ -1,0 +1,4 @@
+(executable
+ (public_name task07_ast)
+ (name main)
+ (libraries expr))

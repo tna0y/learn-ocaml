@@ -1,0 +1,4 @@
+(executable
+ (public_name task08_parser)
+ (name main)
+ (libraries parser))
