@@ -336,17 +336,6 @@ OCaml encourages total functions through `option`/`result`.
 
 ---
 
-## ✅ Checklist
-
-- [ ] Understand `option` type and when to use it
-- [ ] Understand `result` type for errors with messages
-- [ ] Can pattern match on `Some`/`None` and `Ok`/`Error`
-- [ ] Know how to wrap exceptions in `option`/`result`
-- [ ] Understand benefits over exceptions and null
-- [ ] Can chain operations with `option`/`result`
-
----
-
 ## 🚀 Ready to Code!
 
 Open `lib/error_handling.ml` and implement the functions. Remember to use `try ... with` to catch exceptions and convert them to `option`/`result`.

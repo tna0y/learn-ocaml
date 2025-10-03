@@ -342,21 +342,6 @@ The REPL is great for testing small snippets!
 
 ---
 
-## ✅ Checklist
-
-Before moving to the next task, make sure you can:
-
-- [ ] Write a basic OCaml program with `let` bindings
-- [ ] Use `print_endline` for output
-- [ ] Use `read_line ()` for input
-- [ ] Concatenate strings with `^`
-- [ ] Build and run programs with `dune build` and `dune exec`
-- [ ] Run tests with `dune test`
-- [ ] Understand that values are immutable by default
-- [ ] Understand that the last expression is automatically returned
-
----
-
 ## 🚀 Ready to Code!
 
 Now open `bin/main.ml` and implement your solution. Remember:

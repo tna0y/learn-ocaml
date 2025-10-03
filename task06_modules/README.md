@@ -309,17 +309,6 @@ module StringSet = MakeSet(StringOrd)
 
 ---
 
-## ✅ Checklist
-
-- [ ] Understand modules and namespaces
-- [ ] Can write module signatures
-- [ ] Understand functors as module functions
-- [ ] Implement GCD algorithm
-- [ ] Implement rational number operations
-- [ ] Can create a functor (optional but recommended)
-
----
-
 ## 🚀 Ready to Code!
 
 Open `lib/rational.ml` and implement the rational number library. Start with `gcd`, then `make`, then the arithmetic operations.

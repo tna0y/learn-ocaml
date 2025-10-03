@@ -402,20 +402,6 @@ Converting this to tail recursion would make it much less readable with minimal 
 
 ---
 
-## ✅ Checklist
-
-Before moving to the next task, make sure you:
-
-- [ ] Understand the difference between `let` and `let rec`
-- [ ] Can write basic recursive functions
-- [ ] Know what tail recursion is and why it matters
-- [ ] Can use the accumulator pattern for tail recursion
-- [ ] Understand how to handle multiple accumulators (Fibonacci)
-- [ ] Can write efficient recursive implementations
-- [ ] Know when to use tail recursion vs normal recursion
-
----
-
 ## 🚀 Ready to Code!
 
 Open `lib/recursion.ml` and implement your solutions. Start with the simpler `fact`, then tackle `fact_tail`, and finally the more challenging `fib`.

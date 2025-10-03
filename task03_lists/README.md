@@ -348,17 +348,6 @@ This style is declarative ("what to do") vs imperative ("how to do it").
 
 ---
 
-## ✅ Checklist
-
-- [ ] Understand list syntax: `[]`, `::`, `[x; y; z]`
-- [ ] Can pattern match on lists
-- [ ] Understand higher-order functions
-- [ ] Implement `map`, `filter`, `fold_left` tail-recursively
-- [ ] Use the pipeline operator `|>`
-- [ ] Know when to use `List.rev` with accumulators
-
----
-
 ## 🚀 Ready to Code!
 
 Open `lib/list_ops.ml` and implement your solutions. Remember to use tail recursion with accumulators and `List.rev`!

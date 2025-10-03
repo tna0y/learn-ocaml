@@ -313,17 +313,6 @@ OCaml's `'a tree` is **invariant**: `int tree` and `float tree` are completely d
 
 ---
 
-## ✅ Checklist
-
-- [ ] Understand variant types with `type`
-- [ ] Can define recursive types
-- [ ] Know how to write `.mli` interface files
-- [ ] Understand abstract vs concrete types
-- [ ] Implement BST with correct invariants
-- [ ] Can pattern match on custom types
-
----
-
 ## 🚀 Ready to Code!
 
 Open `lib/bst.ml` and implement your Binary Search Tree. Remember to maintain the BST invariant!
