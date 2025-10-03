@@ -1,7 +1,0 @@
-(lang dune 3.20)
-(name task01_hello_world)
-(sections (lib .) (bin ../../bin) (doc ../../doc/task01_hello_world))
-(files
- (lib (META dune-package opam))
- (bin (task01_hello_world))
- (doc (README.md)))

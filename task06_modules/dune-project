@@ -1,0 +1,28 @@
+(lang dune 3.20)
+
+(name task06_modules)
+
+(generate_opam_files true)
+
+(source
+ (github username/reponame))
+
+(authors "Author Name <author@example.com>")
+
+(maintainers "Maintainer Name <maintainer@example.com>")
+
+(license LICENSE)
+
+(documentation https://url/to/documentation)
+
+(package
+ (name task06_modules)
+ (synopsis "Task 6: Modules and Functors")
+ (description "Learn OCaml's module system and functors with Rational numbers")
+ (depends 
+  ocaml
+  (alcotest :with-test))
+ (tags
+  ("ocaml" "learning" "tutorial" "modules" "functors" "rational")))
+
+; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html

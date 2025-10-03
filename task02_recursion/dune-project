@@ -1,0 +1,28 @@
+(lang dune 3.20)
+
+(name task02_recursion)
+
+(generate_opam_files true)
+
+(source
+ (github username/reponame))
+
+(authors "Author Name <author@example.com>")
+
+(maintainers "Maintainer Name <maintainer@example.com>")
+
+(license LICENSE)
+
+(documentation https://url/to/documentation)
+
+(package
+ (name task02_recursion)
+ (synopsis "Task 2: Functions and Recursion")
+ (description "Learn recursive functions, tail recursion, and the accumulator pattern")
+ (depends 
+  ocaml
+  (alcotest :with-test))
+ (tags
+  ("ocaml" "learning" "tutorial" "recursion" "tail-recursion")))
+
+; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html

@@ -1,0 +1,3 @@
+(library
+ (name rational)
+ (public_name task06_modules.rational))

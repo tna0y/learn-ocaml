@@ -1,0 +1,3 @@
+(library
+ (name list_ops)
+ (public_name task03_lists.list_ops))

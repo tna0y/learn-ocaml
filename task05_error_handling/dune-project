@@ -1,0 +1,29 @@
+(lang dune 3.20)
+
+(name task05_error_handling)
+
+(generate_opam_files true)
+
+(source
+ (github username/reponame))
+
+(authors "Author Name <author@example.com>")
+
+(maintainers "Maintainer Name <maintainer@example.com>")
+
+(license LICENSE)
+
+(documentation https://url/to/documentation)
+
+(package
+ (name task05_error_handling)
+ (synopsis "Task 5: Option/Result and Error Handling")
+ (description "Learn explicit error handling with option and result types")
+ (depends 
+  ocaml
+  (alcotest :with-test)
+  (str :with-test))
+ (tags
+  ("ocaml" "learning" "tutorial" "option" "result" "error-handling")))
+
+; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html

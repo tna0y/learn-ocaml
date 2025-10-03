@@ -1,0 +1,4 @@
+(executable
+ (public_name task03_lists)
+ (name main)
+ (libraries list_ops))

@@ -1,0 +1,4 @@
+(executable
+ (public_name task05_error_handling)
+ (name main)
+ (libraries error_handling))
