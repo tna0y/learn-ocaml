@@ -14,49 +14,40 @@
  *)
 
 (** Type definition for binary search tree *)
-type 'a tree =
-  | Leaf
-  | Node of 'a * 'a tree * 'a tree
-[@@warning "-37"]  (* Node will be used when you implement the functions *)
+type 'a tree = Leaf | Node of 'a * 'a tree * 'a tree [@@warning "-37"]
+(* Node will be used when you implement the functions *)
 
 (** Empty tree *)
 let empty = Leaf
 
 (** Insert an element into the tree *)
 let insert _x _tree =
-  failwith "TODO: Implement insert (use 'let rec')"
-  (* Hints:
-   * - Match on tree:
-   *     | Leaf -> create a new Node with x
-   *     | Node (v, left, right) -> compare x with v
-   * - If x < v: insert into left subtree
-   * - If x > v: insert into right subtree
-   * - If x = v: return tree unchanged (no duplicates)
-   * - Use: Node (v, new_left, right) to create updated node
-   *)
+  let rec _insert tree =
+    match tree with
+    | Leaf -> Node (_x, Leaf, Leaf)
+    | Node (value, left, right) -> (
+        match compare _x value with
+        | 0 -> tree
+        | n when n < 0 -> Node (value, _insert left, right)
+        | _ -> Node (value, left, _insert right))
+  in
+  _insert _tree
 
 (** Find an element in the tree *)
-let find _x _tree =
-  failwith "TODO: Implement find (use 'let rec')"
-  (* Hints:
-   * - Match on tree:
-   *     | Leaf -> false (not found)
-   *     | Node (v, left, right) -> compare x with v
-   * - If x = v: return true
-   * - If x < v: search in left subtree
-   * - If x > v: search in right subtree
-   *)
+let find _x _tree = 
+  let rec _find tree =
+    match tree with
+    | Leaf -> false
+    | Node (value, left, right) -> (
+        match compare _x value with
+        | 0 -> true
+        | n when n < 0 -> _find left
+        | _ -> _find right)
+  in
+  _find _tree
+
 
 (** Convert tree to sorted list (in-order traversal) *)
-let to_list _tree =
-  failwith "TODO: Implement to_list (use 'let rec')"
-  (* Hints:
-   * - Match on tree:
-   *     | Leaf -> []
-   *     | Node (v, left, right) -> combine left subtree, v, right subtree
-   * - Use @ to concatenate lists: to_list left @ [v] @ to_list right
-   * - This gives you elements in sorted order!
-   * 
-   * Bonus: Can you make this tail-recursive with an accumulator?
-   *)
-
+let rec to_list _tree = match _tree with
+  | Leaf -> []
+  | Node (value, left, right) -> to_list left @ [value] @ to_list right
