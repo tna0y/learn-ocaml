@@ -2,6 +2,72 @@
 
 open Parser
 
+(* ========== Lexer Tests ========== *)
+
+(* Helper: check lex succeeds *)
+let check_lex input expected =
+  match lex input with
+  | Ok tokens -> Alcotest.(check bool) (Printf.sprintf "lex '%s'" input) true (tokens = expected)
+  | Error msg -> Alcotest.fail (Printf.sprintf "Lex failed: %s" msg)
+
+(* Helper: check lex fails *)
+let check_lex_error input =
+  match lex input with
+  | Ok _ -> Alcotest.fail (Printf.sprintf "Expected lex error for '%s'" input)
+  | Error _ -> ()
+
+(* Test lexing integers *)
+let test_lex_int () =
+  check_lex "0" [INT 0; EOF];
+  check_lex "42" [INT 42; EOF];
+  check_lex "123" [INT 123; EOF]
+
+(* Test lexing negative integers *)
+let test_lex_negative () =
+  check_lex "-5" [INT (-5); EOF];
+  check_lex "-42" [INT (-42); EOF]
+
+(* Test lexing operators *)
+let test_lex_operators () =
+  check_lex "+" [PLUS; EOF];
+  check_lex "-" [MINUS; EOF];
+  check_lex "*" [TIMES; EOF];
+  check_lex "/" [DIV; EOF]
+
+(* Test lexing parentheses *)
+let test_lex_parens () =
+  check_lex "(" [LPAREN; EOF];
+  check_lex ")" [RPAREN; EOF];
+  check_lex "()" [LPAREN; RPAREN; EOF]
+
+(* Test lexing with whitespace *)
+let test_lex_whitespace () =
+  check_lex " 42 " [INT 42; EOF];
+  check_lex "  123  " [INT 123; EOF];
+  check_lex "1 + 2" [INT 1; PLUS; INT 2; EOF]
+
+(* Test lexing simple expressions *)
+let test_lex_simple_expr () =
+  check_lex "1+2" [INT 1; PLUS; INT 2; EOF];
+  check_lex "1 + 2" [INT 1; PLUS; INT 2; EOF];
+  check_lex "5 - 3" [INT 5; MINUS; INT 3; EOF];
+  check_lex "2*3" [INT 2; TIMES; INT 3; EOF];
+  check_lex "6 / 2" [INT 6; DIV; INT 2; EOF]
+
+(* Test lexing complex expressions *)
+let test_lex_complex () =
+  check_lex "1 + 2 * 3" [INT 1; PLUS; INT 2; TIMES; INT 3; EOF];
+  check_lex "(1 + 2) * 3" [LPAREN; INT 1; PLUS; INT 2; RPAREN; TIMES; INT 3; EOF];
+  check_lex "2 * (3 + 4)" [INT 2; TIMES; LPAREN; INT 3; PLUS; INT 4; RPAREN; EOF]
+
+(* Test lexing errors *)
+let test_lex_errors () =
+  check_lex_error "abc";    (* Invalid character *)
+  check_lex_error "1 @ 2";  (* Invalid operator *)
+  check_lex_error "1 # 2"   (* Invalid character *)
+
+(* ========== Parser Tests ========== *)
+
 (* Helper: check parse succeeds *)
 let check_parse input expected =
   match parse input with
@@ -110,28 +176,42 @@ let test_parse_and_eval () =
 let () =
   let open Alcotest in
   run "Task08_Parser" [
-    "basic", [
+    "lexer_basic", [
+      test_case "integers" `Quick test_lex_int;
+      test_case "negative integers" `Quick test_lex_negative;
+      test_case "operators" `Quick test_lex_operators;
+      test_case "parentheses" `Quick test_lex_parens;
+      test_case "whitespace" `Quick test_lex_whitespace;
+    ];
+    "lexer_expressions", [
+      test_case "simple expressions" `Quick test_lex_simple_expr;
+      test_case "complex expressions" `Quick test_lex_complex;
+    ];
+    "lexer_errors", [
+      test_case "invalid characters" `Quick test_lex_errors;
+    ];
+    "parser_basic", [
       test_case "integers" `Quick test_parse_int;
       test_case "negative integers" `Quick test_parse_negative;
       test_case "whitespace" `Quick test_parse_whitespace;
     ];
-    "operators", [
+    "parser_operators", [
       test_case "addition" `Quick test_parse_add;
       test_case "subtraction" `Quick test_parse_sub;
       test_case "multiplication" `Quick test_parse_mul;
       test_case "division" `Quick test_parse_div;
     ];
-    "precedence", [
+    "parser_precedence", [
       test_case "operator precedence" `Quick test_precedence;
     ];
-    "grouping", [
+    "parser_grouping", [
       test_case "parentheses" `Quick test_parentheses;
       test_case "nested parentheses" `Quick test_nested_parens;
     ];
-    "complex", [
+    "parser_complex", [
       test_case "complex expressions" `Quick test_complex;
     ];
-    "errors", [
+    "parser_errors", [
       test_case "error cases" `Quick test_errors;
     ];
     "integration", [
