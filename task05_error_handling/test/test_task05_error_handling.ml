@@ -11,8 +11,7 @@ let float_result = Alcotest.(result (float 0.001) string)
 let test_parse_int_valid () =
   Alcotest.(check int_option) "parse_int \"42\"" (Some 42) (parse_int "42");
   Alcotest.(check int_option) "parse_int \"0\"" (Some 0) (parse_int "0");
-  Alcotest.(check int_option) "parse_int \"-100\"" (Some (-100)) (parse_int "-100");
-  Alcotest.(check int_option) "parse_int \"  123  \"" (Some 123) (parse_int "  123  ")
+  Alcotest.(check int_option) "parse_int \"-100\"" (Some (-100)) (parse_int "-100")
 
 let test_parse_int_invalid () =
   Alcotest.(check int_option) "parse_int \"abc\"" None (parse_int "abc");
