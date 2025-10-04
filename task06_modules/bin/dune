@@ -1,4 +1,4 @@
 (executable
  (public_name task06_modules)
  (name main)
- (libraries rational))
+ (libraries modules_practice))

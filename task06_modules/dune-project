@@ -17,12 +17,12 @@
 
 (package
  (name task06_modules)
- (synopsis "Task 6: Modules and Functors")
- (description "Learn OCaml's module system and functors with Rational numbers")
+ (synopsis "Task 6: Modules and Functors - Progressive Practice")
+ (description "Learn OCaml's module system through 4 progressive mini-modules: basic modules, signatures, and functors")
  (depends 
   ocaml
   (alcotest :with-test))
  (tags
-  ("ocaml" "learning" "tutorial" "modules" "functors" "rational")))
+  ("ocaml" "learning" "tutorial" "modules" "functors" "signatures")))
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html
