@@ -22,38 +22,23 @@ type expr =
   | Div of expr * expr
 
 (** Evaluate an expression *)
-let eval _e =
-  failwith "TODO: Implement eval (use 'let rec')"
-  (* Hints:
-   * - Use 'let rec eval e = ...' (add the 'rec' keyword)
-   * - Use pattern matching: match e with | Int n -> ... | Add (e1, e2) -> ...
-   * - Int n: just return n
-   * - Add (e1, e2): return (eval e1) + (eval e2)
-   * - Sub (e1, e2): return (eval e1) - (eval e2)
-   * - Mul (e1, e2): return (eval e1) * (eval e2)
-   * - Div (e1, e2): return (eval e1) / (eval e2)
-   * - Very simple recursive function!
-   *)
+let rec eval _e = match _e with
+| Int (n) -> n
+| Add (e1, e2) -> eval e1 + eval e2
+| Sub (e1, e2) -> eval e1 - eval e2
+| Mul (e1, e2) -> eval e1 * eval e2
+| Div (e1, e2) -> eval e1 / eval e2
 
 (** Pretty-print an expression *)
-let pp_expr _fmt _e =
-  failwith "TODO: Implement pp_expr (use 'let rec')"
-  (* Hints:
-   * - Use 'let rec pp_expr fmt e = ...' (add the 'rec' keyword)
-   * - Use Format.fprintf fmt "format" args
-   * - Int n: Format.fprintf fmt "%d" n
-   * - Add (e1, e2): Format.fprintf fmt "(%a + %a)" pp_expr e1 pp_expr e2
-   *   (Note: %a takes a formatter function and a value)
-   * - Similarly for Sub, Mul, Div with -, *, / symbols
-   * - Parentheses show structure clearly
-   *)
+let rec pp_expr _fmt = function
+  | Int n -> Format.fprintf _fmt "%d" n
+  | Add (e1, e2) -> Format.fprintf _fmt "(%a + %a)" pp_expr e1 pp_expr e2
+  | Sub (e1, e2) -> Format.fprintf _fmt "(%a - %a)" pp_expr e1 pp_expr e2
+  | Mul (e1, e2) -> Format.fprintf _fmt "(%a * %a)" pp_expr e1 pp_expr e2
+  | Div (e1, e2) -> Format.fprintf _fmt "(%a / %a)" pp_expr e1 pp_expr e2
 
 (** Convert expression to string *)
 let expr_to_string _e =
-  failwith "TODO: Implement expr_to_string"
-  (* Hints:
-   * - Use Format.asprintf "%a" pp_expr e
-   * - asprintf formats to a string instead of stdout
-   * - Very simple one-liner!
-   *)
+  Format.asprintf "%a" pp_expr _e
+
 
