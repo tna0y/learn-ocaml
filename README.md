@@ -1,9 +1,10 @@
 # Learning OCaml
 
 This repo is an attempt to learn a new language in the era of AI.
-Often when we want to learn a new languge we have a program in mind that we want to build. For a personal project, I wanted to build a compiler-like program and thought that OCaml would be a good fit.
 
-So instead of going through a tutorial, I decided that it would be nice to have a personalized course that starts from the basics and continues to relevant topics.
+For a personal project, I wanted to build a compiler-like program and thought that OCaml would be a good fit.
+
+So instead of going through a tutorial, I decided that it would be nice to have a personalized course that starts from the basics and continues to relevant topics skipping stuff I won't need.
 
 
 Steps to reproduce:
@@ -25,7 +26,7 @@ This course is structured in 5 modules, each building on the previous one:
 
 Master the fundamentals of OCaml and functional programming patterns.
 
-- **[Task 1: Hello, World! + Build and I/O](./task01_hello_world/)** ✅ **[START HERE]**
+- **Task 1: Hello, World! + Build and I/O
   - `let` bindings and immutability
   - Basic I/O operations
   - Building with `dune`
