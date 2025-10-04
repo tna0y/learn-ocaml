@@ -1,6 +1,6 @@
 # Learning OCaml
 
-This repo is an attempt to learn a new language in the era of AI.
+This repo is an attempt to learn a new language when agents already write most of my production code.
 
 For a personal project, I wanted to build a compiler-like program and thought that OCaml would be a good fit.
 
