@@ -31,18 +31,35 @@ end = struct
    * - mem: search using Ord.compare
    * - to_list: already a list, return as-is
    *)
+
+
+  type t = 
+  | Leaf
+  | Node of (Ord.t * t * t)
   
-  type t = unit  (* TODO: Replace with your set type using Ord.t *)
+  let empty = Leaf
   
-  let empty = failwith "TODO"
-  
-  let add _x _s = failwith "TODO"
+  let rec add _x _s = match _s with
+  | Leaf -> Node (_x, Leaf, Leaf)
+  | Node (value, left, right) -> (
+      match compare _x value with
+      | 0 -> _s
+      | n when n < 0 -> Node (value, add _x left, right)
+      | _ -> Node (value, left, add _x right))
   (* Hint: Insert x maintaining sorted order using Ord.compare *)
   
-  let mem _x _s = failwith "TODO"
+  let rec mem _x _s = match _s with
+  | Leaf -> false
+  | Node (value, left, right) -> (
+      match compare _x value with
+      | 0 -> true
+      | n when n < 0 -> mem _x left
+      | _ -> mem _x right)
   (* Hint: Search for x using Ord.compare *)
   
-  let to_list _s = failwith "TODO"
+  let rec to_list _s = match _s with
+  | Leaf -> []
+  | Node (value, left, right) -> to_list left @ [value] @ to_list right
 end
 
 (** Now create instantiations for different types *)

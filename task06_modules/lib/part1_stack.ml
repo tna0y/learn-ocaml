@@ -7,24 +7,23 @@
  * This is encapsulation!
  *)
 
+type 'a t = 'a list
 (** The stack type - implement this however you want (list is easiest) *)
-type 'a t = unit  (* TODO: Replace 'unit' with your implementation *)
 
 (** Empty stack *)
-let empty = failwith "TODO: Implement empty"
+let empty = []
 
 (** Push an element *)
-let push _x _s = failwith "TODO: Implement push"
+let push _x _s = _x :: _s
 (* Hint: If using list, this is just :: (cons) *)
 
 (** Pop an element *)
-let pop _s = failwith "TODO: Implement pop"
+let pop _s = match _s with [] -> None | x :: xs -> Some (x, xs)
 (* Hint: Pattern match on your representation
  * - Empty case: return None
  * - Non-empty: return Some (element, rest)
  *)
 
 (** Peek at top element *)
-let peek _s = failwith "TODO: Implement peek"
+let peek _s = match _s with [] -> None | x :: _ -> Some (x)
 (* Hint: Similar to pop, but don't remove the element *)
-

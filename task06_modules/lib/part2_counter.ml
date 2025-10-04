@@ -6,16 +6,16 @@
  * show different interfaces to users!
  *)
 
-type t = unit  (* TODO: Replace with your counter representation *)
+type t = int
 
-let create _initial = failwith "TODO: Implement create"
+let create _initial = _initial
 
-let increment _c = failwith "TODO: Implement increment"
+let increment _c = _c + 1
 
-let decrement _c = failwith "TODO: Implement decrement"
+let decrement _c = _c - 1
 
-let get_value _c = failwith "TODO: Implement get_value"
+let get_value _c = _c
 
-let reset _c = failwith "TODO: Implement reset"
+let reset _c = 0
 (* Reset counter to 0 *)
 
