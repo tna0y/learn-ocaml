@@ -1,3 +1,5 @@
 (library
- (name rational)
- (public_name task06_modules.rational))
+ (name modules_practice)
+ (public_name task06_modules.modules_practice)
+ (modules part1_stack part2_counter part2_counter_limited part3_queue part4_set)
+ (modules_without_implementation part2_counter_limited))

@@ -1,136 +1,149 @@
 (* Tests for Task 6: Modules and Functors *)
 
-open Rational
+open Modules_practice
 
-(* Helper to create testable for rational *)
-let rational = Alcotest.testable
-  (fun ppf r -> Format.fprintf ppf "%s" (to_string r))
-  (fun a b -> a.num = b.num && a.den = b.den)
-
-(* Tests for make *)
-let test_make_simple () =
-  let r = make 2 3 in
-  Alcotest.(check int) "numerator" 2 r.num;
-  Alcotest.(check int) "denominator" 3 r.den
-
-let test_make_simplified () =
-  let r = make 6 9 in  (* Should simplify to 2/3 *)
-  Alcotest.(check int) "simplified numerator" 2 r.num;
-  Alcotest.(check int) "simplified denominator" 3 r.den
-
-let test_make_negative () =
-  (* Sign should be in numerator *)
-  let r1 = make (-6) 9 in
-  Alcotest.(check int) "negative num" (-2) r1.num;
-  Alcotest.(check int) "positive den" 3 r1.den;
+(* Part 1: Stack tests *)
+module TestStack = struct
   
-  let r2 = make 6 (-9) in
-  Alcotest.(check int) "negative num from neg den" (-2) r2.num;
-  Alcotest.(check int) "positive den from neg den" 3 r2.den
+  let test_empty_stack () =
+    let s = Part1_stack.empty in
+    Alcotest.(check (option int)) "peek empty" None (Part1_stack.peek s);
+    Alcotest.(check (option (pair int reject))) "pop empty" None 
+      (match Part1_stack.pop s with None -> None | Some (x, _) -> Some (x, ()))
+  
+  let test_push_pop () =
+    let open Part1_stack in
+    let s = empty |> push 1 |> push 2 |> push 3 in
+    Alcotest.(check (option int)) "peek top" (Some 3) (peek s);
+    match pop s with
+    | None -> Alcotest.fail "Should not be empty"
+    | Some (x, s') ->
+        Alcotest.(check int) "popped value" 3 x;
+        Alcotest.(check (option int)) "peek after pop" (Some 2) (peek s')
+  
+  let test_stack_order () =
+    let open Part1_stack in
+    let s = empty |> push 1 |> push 2 |> push 3 in
+    let extract_all s =
+      let rec loop acc s =
+        match pop s with
+        | None -> List.rev acc
+        | Some (x, s') -> loop (x :: acc) s'
+      in loop [] s
+    in
+    Alcotest.(check (list int)) "LIFO order" [3; 2; 1] (extract_all s)
+end
 
-let test_make_zero () =
-  let r = make 0 5 in
-  Alcotest.(check int) "zero numerator" 0 r.num;
-  Alcotest.(check int) "one denominator" 1 r.den
+(* Part 2: Counter tests *)
+module TestCounter = struct
+  open Part2_counter
+  
+  let test_create () =
+    let c = create 5 in
+    Alcotest.(check int) "initial value" 5 (get_value c)
+  
+  let test_increment () =
+    let c = create 0 |> increment |> increment |> increment in
+    Alcotest.(check int) "after 3 increments" 3 (get_value c)
+  
+  let test_decrement () =
+    let c = create 10 |> decrement |> decrement in
+    Alcotest.(check int) "after 2 decrements" 8 (get_value c)
+  
+  let test_reset () =
+    let c = create 5 |> increment |> increment |> reset in
+    Alcotest.(check int) "after reset" 0 (get_value c)
+end
 
-let test_make_invalid () =
-  Alcotest.check_raises "zero denominator"
-    (Failure "Denominator cannot be zero")
-    (fun () -> ignore (make 5 0))
+(* Part 3: Queue tests *)
+module TestQueue = struct
+  open Part3_queue
+  
+  let test_int_queue () =
+    let q = IntQueue.empty 
+      |> IntQueue.enqueue 1 
+      |> IntQueue.enqueue 2 
+      |> IntQueue.enqueue 3 in
+    match IntQueue.dequeue q with
+    | None -> Alcotest.fail "Queue should not be empty"
+    | Some (x, q') ->
+        Alcotest.(check int) "FIFO first" 1 x;
+        match IntQueue.dequeue q' with
+        | None -> Alcotest.fail "Queue should have more"
+        | Some (y, _) -> Alcotest.(check int) "FIFO second" 2 y
+  
+  let test_string_queue () =
+    let q = StringQueue.empty
+      |> StringQueue.enqueue "hello"
+      |> StringQueue.enqueue "world" in
+    match StringQueue.dequeue q with
+    | None -> Alcotest.fail "Queue should not be empty"
+    | Some (s, _) -> Alcotest.(check string) "first string" "hello" s
+  
+  let test_queue_to_string () =
+    let q = IntQueue.empty |> IntQueue.enqueue 1 |> IntQueue.enqueue 2 in
+    let s = IntQueue.to_string q in
+    Alcotest.(check bool) "to_string not empty" true (String.length s > 0)
+end
 
-(* Tests for add *)
-let test_add_simple () =
-  let r = add (make 1 2) (make 1 3) in
-  Alcotest.(check rational) "1/2 + 1/3 = 5/6"
-    (make 5 6) r
-
-let test_add_same_denominator () =
-  let r = add (make 1 4) (make 1 4) in
-  Alcotest.(check rational) "1/4 + 1/4 = 1/2"
-    (make 1 2) r
-
-let test_add_with_simplification () =
-  let r = add (make 1 6) (make 1 3) in
-  Alcotest.(check rational) "1/6 + 1/3 = 1/2"
-    (make 1 2) r
-
-let test_add_negative () =
-  let r = add (make 1 2) (make (-1) 3) in
-  Alcotest.(check rational) "1/2 + (-1/3) = 1/6"
-    (make 1 6) r
-
-(* Tests for mul *)
-let test_mul_simple () =
-  let r = mul (make 2 3) (make 3 4) in
-  Alcotest.(check rational) "2/3 * 3/4 = 1/2"
-    (make 1 2) r
-
-let test_mul_by_reciprocal () =
-  let r = mul (make 1 2) (make 2 1) in
-  Alcotest.(check rational) "1/2 * 2/1 = 1/1"
-    (make 1 1) r
-
-let test_mul_by_zero () =
-  let r = mul (make 2 3) (make 0 1) in
-  Alcotest.(check rational) "2/3 * 0 = 0"
-    (make 0 1) r
-
-let test_mul_negative () =
-  let r = mul (make 2 3) (make (-3) 2) in
-  Alcotest.(check rational) "2/3 * (-3/2) = -1/1"
-    (make (-1) 1) r
-
-(* Tests for to_string *)
-let test_to_string () =
-  Alcotest.(check string) "2/3" "2/3" (to_string (make 2 3));
-  Alcotest.(check string) "-2/3" "-2/3" (to_string (make (-2) 3));
-  Alcotest.(check bool) "5/1 or 5" true 
-    (let s = to_string (make 5 1) in s = "5/1" || s = "5")
-
-(* Integration tests *)
-let test_complex_expression () =
-  (* (1/2 + 1/3) * 2/5 = 5/6 * 2/5 = 10/30 = 1/3 *)
-  let sum = add (make 1 2) (make 1 3) in
-  let result = mul sum (make 2 5) in
-  Alcotest.(check rational) "(1/2 + 1/3) * 2/5 = 1/3"
-    (make 1 3) result
-
-let test_chain_operations () =
-  (* 1/2 + 1/4 + 1/8 = 7/8 *)
-  let r1 = add (make 1 2) (make 1 4) in  (* 3/4 *)
-  let r2 = add r1 (make 1 8) in          (* 7/8 *)
-  Alcotest.(check rational) "1/2 + 1/4 + 1/8 = 7/8"
-    (make 7 8) r2
+(* Part 4: Set tests *)
+module TestSet = struct
+  open Part4_set
+  
+  let test_int_set () =
+    let s = IntSet.empty 
+      |> IntSet.add 3 
+      |> IntSet.add 1 
+      |> IntSet.add 2 
+      |> IntSet.add 2 in  (* Duplicate *)
+    Alcotest.(check bool) "mem 1" true (IntSet.mem 1 s);
+    Alcotest.(check bool) "mem 2" true (IntSet.mem 2 s);
+    Alcotest.(check bool) "mem 3" true (IntSet.mem 3 s);
+    Alcotest.(check bool) "mem 4" false (IntSet.mem 4 s);
+    (* Should be sorted and no duplicates *)
+    Alcotest.(check (list int)) "sorted list" [1; 2; 3] (IntSet.to_list s)
+  
+  let test_string_set () =
+    let s = StringSet.empty
+      |> StringSet.add "dog"
+      |> StringSet.add "cat"
+      |> StringSet.add "bird"
+      |> StringSet.add "cat" in  (* Duplicate *)
+    Alcotest.(check (list string)) "sorted strings" 
+      ["bird"; "cat"; "dog"] (StringSet.to_list s)
+  
+  let test_float_set () =
+    let s = FloatSet.empty
+      |> FloatSet.add 3.14
+      |> FloatSet.add 1.0
+      |> FloatSet.add 2.5 in
+    Alcotest.(check bool) "mem 1.0" true (FloatSet.mem 1.0 s);
+    Alcotest.(check bool) "mem 5.0" false (FloatSet.mem 5.0 s)
+end
 
 (* Test suite *)
 let () =
   let open Alcotest in
   run "Task06_Modules" [
-    "make", [
-      test_case "simple creation" `Quick test_make_simple;
-      test_case "simplification" `Quick test_make_simplified;
-      test_case "negative numbers" `Quick test_make_negative;
-      test_case "zero" `Quick test_make_zero;
-      test_case "invalid (zero denominator)" `Quick test_make_invalid;
+    "Part1_Stack", [
+      test_case "empty stack" `Quick TestStack.test_empty_stack;
+      test_case "push and pop" `Quick TestStack.test_push_pop;
+      test_case "LIFO order" `Quick TestStack.test_stack_order;
     ];
-    "add", [
-      test_case "simple addition" `Quick test_add_simple;
-      test_case "same denominator" `Quick test_add_same_denominator;
-      test_case "with simplification" `Quick test_add_with_simplification;
-      test_case "with negative" `Quick test_add_negative;
+    "Part2_Counter", [
+      test_case "create" `Quick TestCounter.test_create;
+      test_case "increment" `Quick TestCounter.test_increment;
+      test_case "decrement" `Quick TestCounter.test_decrement;
+      test_case "reset" `Quick TestCounter.test_reset;
     ];
-    "mul", [
-      test_case "simple multiplication" `Quick test_mul_simple;
-      test_case "by reciprocal" `Quick test_mul_by_reciprocal;
-      test_case "by zero" `Quick test_mul_by_zero;
-      test_case "with negative" `Quick test_mul_negative;
+    "Part3_Queue", [
+      test_case "int queue FIFO" `Quick TestQueue.test_int_queue;
+      test_case "string queue" `Quick TestQueue.test_string_queue;
+      test_case "to_string" `Quick TestQueue.test_queue_to_string;
     ];
-    "to_string", [
-      test_case "string conversion" `Quick test_to_string;
-    ];
-    "integration", [
-      test_case "complex expression" `Quick test_complex_expression;
-      test_case "chain operations" `Quick test_chain_operations;
+    "Part4_Set", [
+      test_case "int set" `Quick TestSet.test_int_set;
+      test_case "string set" `Quick TestSet.test_string_set;
+      test_case "float set" `Quick TestSet.test_float_set;
     ];
   ]
-

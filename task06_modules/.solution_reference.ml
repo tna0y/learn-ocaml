@@ -1,38 +1,95 @@
 (* REFERENCE SOLUTION - Do not peek until you've tried implementing it yourself! *)
 
-type t = { num : int; den : int }
+(* ===== PART 1: Stack ===== *)
+module Part1_Stack = struct
+  type 'a t = 'a list
+  
+  let empty = []
+  
+  let push x s = x :: s
+  
+  let pop = function
+    | [] -> None
+    | x :: xs -> Some (x, xs)
+  
+  let peek = function
+    | [] -> None
+    | x :: _ -> Some x
+end
 
-(* Euclidean GCD algorithm *)
-let rec gcd a b =
-  let a = abs a in
-  let b = abs b in
-  if b = 0 then a
-  else gcd b (a mod b)
+(* ===== PART 2: Counter ===== *)
+module Part2_Counter = struct
+  type t = int
+  
+  let create initial = initial
+  
+  let increment c = c + 1
+  
+  let decrement c = c - 1
+  
+  let get_value c = c
+  
+  let reset _ = 0
+end
 
-(* Create simplified rational *)
-let make num den =
-  if den = 0 then failwith "Denominator cannot be zero";
-  let g = gcd num den in
-  let num' = num / g in
-  let den' = den / g in
-  (* Keep sign in numerator *)
-  if den' < 0 then { num = -num'; den = -den' }
-  else { num = num'; den = den' }
+(* ===== PART 3: Queue Functor ===== *)
+module Part3_Queue_Solution = struct
+  module type ELEMENT = sig
+    type t
+    val to_string : t -> string
+  end
+  
+  module MakeQueue(E : ELEMENT) = struct
+    type t = E.t list
+    
+    let empty = []
+    
+    let enqueue x q = q @ [x]  (* Add to end *)
+    
+    let dequeue = function
+      | [] -> None
+      | x :: xs -> Some (x, xs)  (* Remove from front *)
+    
+    let to_string q =
+      "[" ^ String.concat "; " (List.map E.to_string q) ^ "]"
+  end
+end
 
-(* Addition: a/b + c/d = (ad + bc) / bd *)
-let add a b =
-  let num = a.num * b.den + b.num * a.den in
-  let den = a.den * b.den in
-  make num den
+(* ===== PART 4: Set Functor ===== *)
+module Part4_Set_Solution = struct
+  module type ORDERED = sig
+    type t
+    val compare : t -> t -> int
+  end
+  
+  module MakeSet(Ord : ORDERED) = struct
+    type t = Ord.t list  (* Sorted list, no duplicates *)
+    
+    let empty = []
+    
+    let rec add x = function
+      | [] -> [x]
+      | y :: ys as s ->
+          let c = Ord.compare x y in
+          if c < 0 then x :: s
+          else if c = 0 then s  (* Already exists *)
+          else y :: add x ys
+    
+    let rec mem x = function
+      | [] -> false
+      | y :: ys ->
+          let c = Ord.compare x y in
+          if c = 0 then true
+          else if c < 0 then false  (* Past where it would be *)
+          else mem x ys
+    
+    let to_list s = s
+  end
+end
 
-(* Multiplication: a/b * c/d = ac / bd *)
-let mul a b =
-  let num = a.num * b.num in
-  let den = a.den * b.den in
-  make num den
-
-(* Convert to string *)
-let to_string r =
-  if r.den = 1 then string_of_int r.num
-  else Printf.sprintf "%d/%d" r.num r.den
-
+(* Key insights:
+ * - Part 1: Abstract types hide implementation
+ * - Part 2: Same code, different signatures = different interfaces
+ * - Part 3: Functors enable code reuse (one queue for all types)
+ * - Part 4: Complex functors like OCaml's Set module
+ *)

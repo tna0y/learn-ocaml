@@ -1,70 +1,212 @@
 # Task 6: Modules and Functors
 
-Welcome to Task 6, the final task in Module A! You've learned the fundamentals—now it's time to explore OCaml's most distinctive feature: the **module system**. Modules let you organize code, create namespaces, and write generic, reusable components using **functors**.
+Welcome to Task 6, the final task in Module A! You've learned OCaml fundamentals—now it's time to explore OCaml's most powerful and distinctive feature: the **module system**. 
 
-By the end of this task, you'll understand modules, signatures, and functors, and you'll implement a generic `Rational` number library.
+Unlike other tasks, this one is structured as **4 progressive mini-modules**, each teaching one concept hands-on. You'll write actual `.mli` files, create functors, and see how modules enable code organization and reuse.
 
 ---
 
 ## 🎯 Learning Goals
 
-- Understand OCaml's module system
-- Create modules and module signatures
-- Use functors to parameterize modules
-- Implement a `Rational` number type
-- Compare modules with constructs in other languages
+- Create modules to group related functionality
+- Write `.mli` signature files to hide implementation
+- Understand abstract vs concrete types
+- Implement functors to parameterize over implementations
+- Instantiate functors with different module arguments
+- See how modules enable code reuse
 
 ---
 
-## 📚 Theory: Modules and Functors
+## 📚 Theory: OCaml's Module System
 
 ### What Are Modules?
 
-A module is a collection of definitions (types, values, functions) grouped under a namespace:
+A **module** is a collection of definitions grouped under a namespace:
 
 ```ocaml
 module Math = struct
   let pi = 3.14159
-  let square x = x * x
+  let square x = x *. x
+  let circle_area r = pi *. square r
 end
 
 (* Usage *)
-let area r = Math.pi *. Math.square r
-```
-
-**Comparison with other languages:**
-- **C++**: Namespaces
-- **Python**: Modules/packages
-- **Java**: Packages and classes
-- **Rust**: Modules (`mod`)
-- **OCaml**: First-class modules (much more powerful!)
-
-### Module Signatures
-
-A signature specifies what a module exposes:
-
-```ocaml
-module type MATH = sig
-  val pi : float
-  val square : float -> float
-end
-
-module Math : MATH = struct
-  let pi = 3.14159
-  let square x = x *. x
-  let hidden = 42  (* Not in signature, so private! *)
-end
+let area = Math.circle_area 5.0
 ```
 
 **Comparison:**
-- **Java**: Interfaces
-- **Rust**: Traits (somewhat similar)
-- **C++**: Abstract classes / concepts
-- **OCaml**: Module signatures (types, not just functions!)
+- **C++**: Namespaces
+- **Python**: Modules/files
+- **Java**: Packages + classes
+- **Rust**: Modules (`mod`)
+- **OCaml**: First-class modules (much more powerful!)
+
+### Module Signatures (.mli files)
+
+A **signature** specifies what's visible from outside:
+
+```ocaml
+(* stack.mli - the interface *)
+type 'a t
+val empty : 'a t
+val push : 'a -> 'a t -> 'a t
+val pop : 'a t -> ('a * 'a t) option
+
+(* stack.ml - the implementation *)
+type 'a t = 'a list  (* Implementation hidden! *)
+let empty = []
+let push x s = x :: s
+let pop = function
+  | [] -> None
+  | x :: xs -> Some (x, xs)
+```
+
+Users can't directly access the list—only through your API!
+
+**Benefits:**
+1. **Encapsulation**: Hide implementation details
+2. **Type safety**: Can't misuse internal representation  
+3. **Change freedom**: Swap implementation without breaking clients
+4. **Documentation**: Interface is a contract
+
+### Abstract Types
+
+When `.mli` says `type t` without definition, it's **abstract**:
+
+```ocaml
+(* Abstract: users can't construct directly *)
+type t
+
+(* Concrete: users see the representation *)
+type t = int list
+```
+
+Abstract types force users to use your API, maintaining invariants.
 
 ### Functors: Functions on Modules
 
 A **functor** is a function that takes a module and returns a module:
+
+```ocaml
+module type COMPARABLE = sig
+  type t
+  val compare : t -> t -> int
+end
+
+module MakeSet(Elem : COMPARABLE) = struct
+  type t = Elem.t list
+  
+  let insert x set =
+    if List.exists (fun y -> Elem.compare x y = 0) set
+    then set
+    else x :: set
+end
+
+(* Use with different types! *)
+module IntOrd = struct type t = int let compare = compare end
+module IntSet = MakeSet(IntOrd)
+
+module StringOrd = struct type t = string let compare = compare end
+module StringSet = MakeSet(StringOrd)
+```
+
+**One functor, many instantiations!** This is like C++ templates or Rust generics, but checked at functor definition, not instantiation.
+
+---
+
+## 📝 Your Task: 4 Progressive Mini-Modules
+
+You'll build 4 modules, each demonstrating one concept. Each has its own directory in `lib/`.
+
+### Part 1: Basic Stack Module
+
+**File**: `lib/part1_stack.ml` (and `part1_stack.mli`)
+
+Create a basic stack module with:
+
+```ocaml
+type 'a t  (* Stack type - YOU define representation *)
+val empty : 'a t
+val push : 'a -> 'a t -> 'a t
+val pop : 'a t -> ('a * 'a t) option
+val peek : 'a t -> 'a option
+```
+
+**Requirements:**
+- Write BOTH `.ml` and `.mli` files
+- In `.mli`: keep `type 'a t` abstract (don't reveal implementation)
+- In `.ml`: implement using a list (but users won't know!)
+- All operations should be pure (immutable)
+
+**Example usage:**
+```ocaml
+let s = Stack.empty |> Stack.push 1 |> Stack.push 2;;
+Stack.peek s  (* Some 2 *)
+Stack.pop s   (* Some (2, <stack with [1]>) *)
+```
+
+---
+
+### Part 2: Counter Module with Multiple Signatures
+
+**Files**: `lib/part2_counter.ml`, `part2_counter_full.mli`, `part2_counter_limited.mli`
+
+Implement a counter module, then write **TWO different signatures** for it:
+
+**Implementation** (`counter.ml`) should have:
+```ocaml
+type t  (* Counter with internal value *)
+val create : int -> t
+val increment : t -> t
+val decrement : t -> t
+val get_value : t -> int
+val reset : t -> t  (* Resets to 0 *)
+```
+
+**Signature 1** (`counter_full.mli`): Expose everything
+
+**Signature 2** (`counter_limited.mli`): Hide `get_value` and `reset`
+
+**Goal**: See how different signatures control access to the same implementation!
+
+---
+
+### Part 3: Generic Queue Functor
+
+**File**: `lib/part3_queue.ml`
+
+Create a functor that makes queues for any element type that can be compared:
+
+```ocaml
+module type ELEMENT = sig
+  type t
+  val to_string : t -> string  (* For debugging/display *)
+end
+
+module MakeQueue(E : ELEMENT) : sig
+  type t
+  val empty : t
+  val enqueue : E.t -> t -> t
+  val dequeue : t -> (E.t * t) option
+  val to_string : t -> string
+end = struct
+  (* YOU IMPLEMENT THIS *)
+end
+```
+
+Then create **two instantiations**:
+- `IntQueue` using `IntElement`
+- `StringQueue` using `StringElement`
+
+**Goal**: Write a functor yourself and see code reuse in action!
+
+---
+
+### Part 4: Ordered Set Functor
+
+**File**: `lib/part4_set.ml`
+
+Create a generic set functor (like OCaml's Set module):
 
 ```ocaml
 module type ORDERED = sig
@@ -72,138 +214,23 @@ module type ORDERED = sig
   val compare : t -> t -> int
 end
 
-module MakeSet (Ord : ORDERED) = struct
-  type t = Ord.t list
-  
-  let insert x set =
-    if List.exists (fun y -> Ord.compare x y = 0) set
-    then set
-    else x :: set
-end
-
-(* Usage *)
-module IntOrd = struct
-  type t = int
-  let compare = compare
-end
-
-module IntSet = MakeSet(IntOrd)
-```
-
-**Comparison:**
-- **C++**: Templates (but checked at instantiation)
-- **Rust**: Generics with trait bounds (very similar!)
-- **Haskell**: Type classes (different mechanism, similar power)
-- **Java**: Generics (weaker—can't abstract over implementations)
-- **OCaml**: Functors (very powerful!)
-
-### Why Functors?
-
-Functors let you write code that's generic over *implementations*, not just types:
-
-```ocaml
-(* Generic over the representation of integers! *)
-module MakeRational (Int : INTEGER_OPS) = struct
-  type t = { num : Int.t; den : Int.t }
-  
-  let make n d = 
-    let g = Int.gcd n d in
-    { num = Int.div n g; den = Int.div d g }
-end
-```
-
-You could instantiate this with:
-- Standard `int`
-- Arbitrary-precision integers
-- Modular arithmetic integers
-- Any type with the right operations!
-
----
-
-## 📝 Your Task
-
-Implement a **Rational number library** using modules and functors.
-
-### Part 1: Basic Rational Module
-
-In `lib/rational.ml`, implement a module with:
-
-#### Type
-
-```ocaml
-type t = { num : int; den : int }
-```
-
-Represents a rational number `num/den`.
-
-#### Functions
-
-**1. `make : int -> int -> t`**
-
-Create a rational number in simplified form.
-
-**Examples:**
-```ocaml
-make 6 9 = { num = 2; den = 3 }  (* simplified *)
-make 5 1 = { num = 5; den = 1 }
-make 0 5 = { num = 0; den = 1 }
-```
-
-**Requirements:**
-- Simplify using GCD
-- Handle negative numbers: keep sign in numerator
-- Raise exception if denominator is zero
-
-**2. `add : t -> t -> t`**
-
-Add two rationals: `a/b + c/d = (ad + bc) / bd`
-
-**Example:**
-```ocaml
-add (make 1 2) (make 1 3) = make 5 6
-```
-
-**3. `mul : t -> t -> t`**
-
-Multiply two rationals: `a/b * c/d = ac / bd`
-
-**Example:**
-```ocaml
-mul (make 2 3) (make 3 4) = make 1 2
-```
-
-**4. `to_string : t -> string`**
-
-Convert to string representation.
-
-**Examples:**
-```ocaml
-to_string (make 2 3) = "2/3"
-to_string (make 5 1) = "5/1" or "5"  (* either is fine *)
-```
-
-### Part 2: Functor (Advanced)
-
-Create a functor `MakeRational` that's parameterized over integer operations:
-
-```ocaml
-module type INT_OPS = sig
+module MakeSet(Ord : ORDERED) : sig
   type t
-  val zero : t
-  val add : t -> t -> t
-  val mul : t -> t -> t
-  val div : t -> t -> t
-  val gcd : t -> t -> t
-  val compare : t -> t -> int
-end
-
-module MakeRational (I : INT_OPS) = struct
-  type t = { num : I.t; den : I.t }
-  (* Implement using I.add, I.mul, etc. *)
+  val empty : t
+  val add : Ord.t -> t -> t
+  val mem : Ord.t -> t -> bool
+  val to_list : t -> Ord.t list
+end = struct
+  (* YOU IMPLEMENT THIS *)
 end
 ```
 
-This is optional but highly encouraged for understanding functors!
+Then create **three instantiations**:
+- `IntSet`
+- `StringSet`  
+- `FloatSet` (careful with float comparison!)
+
+**Goal**: See how one functor works with many types!
 
 ---
 
@@ -217,101 +244,129 @@ dune utop
 
 In utop:
 ```ocaml
-open Rational;;
+open Part1_stack;;
+let s = empty |> push 1 |> push 2 |> push 3;;
+peek s;;
 
-let half = make 1 2;;
-let third = make 1 3;;
-let sum = add half third;;
-to_string sum;;  (* "5/6" *)
+open Part3_queue;;
+module IQ = IntQueue;;
+let q = IQ.empty |> IQ.enqueue 5 |> IQ.enqueue 10;;
+IQ.dequeue q;;
 
-let product = mul half third;;
-to_string product;;  (* "1/6" *)
+open Part4_set;;
+module IS = IntSet;;
+let s = IS.empty |> IS.add 3 |> IS.add 1 |> IS.add 2;;
+IS.to_list s;;  (* Should be sorted! *)
 ```
 
 ---
 
 ## 💡 Common Mistakes
 
-### Mistake 1: Not Simplifying
+### Mistake 1: Revealing Implementation in .mli
+
+```ocaml
+(* BAD - reveals internal list *)
+type 'a t = 'a list
+
+(* GOOD - keeps it abstract *)
+type 'a t
+```
+
+### Mistake 2: Forgetting Signature in Functor
+
+```ocaml
+(* BAD - no signature constraint *)
+module MakeQueue(E : ELEMENT) = struct
+  (* ... *)
+end
+
+(* GOOD - signature ensures interface *)
+module MakeQueue(E : ELEMENT) : sig
+  type t
+  val empty : t
+  (* ... *)
+end = struct
+  (* ... *)
+end
+```
+
+### Mistake 3: Wrong Module Type Syntax
 
 ```ocaml
 (* WRONG *)
-let add a b =
-  { num = a.num * b.den + b.num * a.den;
-    den = a.den * b.den }
-(* Result: 1/2 + 1/3 = 5/6 ✓, but 2/4 + 1/2 = 8/8 ✗ (not simplified!) *)
+module type ELEMENT = {
+  type t  (* Not OCaml syntax! *)
+}
 
 (* RIGHT *)
-let add a b =
-  let num = a.num * b.den + b.num * a.den in
-  let den = a.den * b.den in
-  let g = gcd num den in
-  { num = num / g; den = den / g }
+module type ELEMENT = sig
+  type t
+end
 ```
 
-### Mistake 2: Wrong GCD Algorithm
+### Mistake 4: Not Using Functor Parameter
 
 ```ocaml
-(* Euclidean GCD *)
-let rec gcd a b =
-  if b = 0 then abs a  (* abs to handle negatives *)
-  else gcd b (a mod b)
-```
+(* WRONG - doesn't use E at all! *)
+module MakeQueue(E : ELEMENT) = struct
+  type t = int list  (* Should use E.t! *)
+end
 
-### Mistake 3: Sign Handling
-
-```ocaml
-(* Keep sign in numerator *)
-let make num den =
-  if den = 0 then failwith "Denominator cannot be zero";
-  let g = gcd num den in
-  let num' = num / g in
-  let den' = den / g in
-  if den' < 0 then { num = -num'; den = -den' }
-  else { num = num'; den = den' }
+(* RIGHT *)
+module MakeQueue(E : ELEMENT) = struct
+  type t = E.t list
+end
 ```
 
 ---
 
 ## 🎓 Going Deeper
 
-### Modules are First-Class
+### Why OCaml's Module System is Special
 
-You can pass modules as values (with some syntax):
+**Most languages**: Modules are just namespaces
+**OCaml**: Modules are first-class, parameterizable, with strong type checking
+
+Functors are checked at **definition time**, not instantiation:
+- **C++ templates**: Errors at instantiation (cryptic messages)
+- **Rust generics**: Similar to OCaml (trait bounds)
+- **Java generics**: Type erasure (weaker)
+- **OCaml functors**: Full type checking upfront
+
+### Module System Uses
+
+1. **Data structures**: Generic collections (Set, Map, Queue)
+2. **Strategies**: Different implementations of same interface
+3. **Configuration**: Parameterize app behavior
+4. **Testing**: Mock implementations via modules
+
+### Real OCaml Code
+
+OCaml's standard library uses this heavily:
 
 ```ocaml
-let module M = MyModule in
-M.some_function
+module IntMap = Map.Make(struct 
+  type t = int 
+  let compare = compare 
+end)
 ```
 
-### Module Type Ascription
-
-```ocaml
-module M : SIGNATURE = struct
-  (* implementation *)
-end
-```
-
-This hides anything not in `SIGNATURE`.
-
-### Functors Enable Code Reuse
-
-Instead of duplicating code for `IntSet`, `StringSet`, `FloatSet`, write one functor:
-
-```ocaml
-module MakeSet (Ord : ORDERED) = struct
-  (* Generic set implementation *)
-end
-
-module IntSet = MakeSet(IntOrd)
-module StringSet = MakeSet(StringOrd)
-```
+One `Map` functor generates maps for any key type!
 
 ---
 
 ## 🚀 Ready to Code!
 
-Open `lib/rational.ml` and implement the rational number library. Start with `gcd`, then `make`, then the arithmetic operations.
+This task is different - you'll work through 4 mini-modules progressively:
 
-Good luck with the final Module A task! 🎉
+1. **Part 1**: Basic module + signature (learn encapsulation)
+2. **Part 2**: Multiple signatures (learn access control)
+3. **Part 3**: First functor (learn parameterization)
+4. **Part 4**: Complex functor (learn code reuse)
 
+Each part builds your understanding of the module system piece by piece.
+
+Start with `lib/part1_stack.ml` and `lib/part1_stack.mli`!
+
+Good luck! 🎉
