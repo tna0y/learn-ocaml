@@ -22,32 +22,23 @@
 
 (** Apply a function to each element *)
 let map _f _list =
-  failwith "TODO: Implement map"
-  (* Hints:
-   * - Define helper: let rec loop acc = function | [] -> ... | x :: xs -> ...
-   * - Base case: List.rev acc
-   * - Recursive case: loop (f x :: acc) xs
-   * - Initial call: loop [] list
-   *)
+  let rec loop _l acc =
+    match _l with [] -> List.rev acc | x :: xs -> loop xs (_f x :: acc)
+  in
+  loop _list []
 
 (** Keep only elements satisfying a predicate *)
 let filter _pred _list =
-  failwith "TODO: Implement filter"
-  (* Hints:
-   * - Similar to map, but conditionally add to accumulator
-   * - If pred x then loop (x :: acc) xs
-   * - Else loop acc xs (skip this element)
-   * - Don't forget List.rev at the end!
-   *)
+  let rec loop _l acc =
+    match _l with
+    | [] -> List.rev acc
+    | x :: xs -> if _pred x then loop xs (x :: acc) else loop xs acc
+  in
+  loop _list []
 
 (** Reduce a list to a single value (left to right) *)
 let fold_left _f _init _list =
-  failwith "TODO: Implement fold_left"
-  (* Hints:
-   * - Define helper: let rec loop acc = function | [] -> ... | x :: xs -> ...
-   * - Base case: acc (not List.rev! fold_left returns the accumulator directly)
-   * - Recursive case: loop (f acc x) xs
-   * - Initial call: loop init list
-   * - This is naturally tail-recursive
-   *)
-
+  let rec loop cur rem =
+    match rem with [] -> cur | x :: xs -> loop (_f cur x) xs
+  in
+  loop _init _list

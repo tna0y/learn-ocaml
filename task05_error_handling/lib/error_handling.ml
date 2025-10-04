@@ -16,42 +16,16 @@
  *)
 
 (** Parse a string to an integer *)
-let parse_int _s =
-  failwith "TODO: Implement parse_int"
-  (* Hints:
-   * - Use try...with to catch exceptions
-   * - try Some (int_of_string s)
-   * - with Failure _ -> None
-   * - This converts exception to option type
-   *)
+let parse_int _s = try Some (int_of_string _s) with Failure _ -> None
 
 (** Return first Some value, or None *)
 let combine_options _opt1 _opt2 =
-  failwith "TODO: Implement combine_options"
-  (* Hints:
-   * - Match on opt1:
-   *     | Some x -> Some x (return first if present)
-   *     | None -> opt2 (return second)
-   * - Simple pattern matching!
-   *)
+  match _opt1 with Some x -> Some x | _ -> _opt2
 
 (** Safe division returning result *)
-let safe_div _a _b =
-  failwith "TODO: Implement safe_div"
-  (* Hints:
-   * - Check if b = 0
-   * - If yes: Error "Division by zero"
-   * - If no: Ok (a / b)
-   * - Use if...then...else
-   *)
+let safe_div _a _b = if _b = 0 then Error "Division by zero" else Ok (_a / _b)
 
 (** Safe square root returning result *)
 let safe_sqrt _x =
-  failwith "TODO: Implement safe_sqrt"
-  (* Hints:
-   * - Check if x < 0.0
-   * - If yes: Error "Cannot take square root of negative number"
-   * - If no: Ok (sqrt x)  or  Ok (Float.sqrt x)
-   * - sqrt is from Stdlib
-   *)
-
+  if _x < 0.0 then Error "Cannot take square root of negative number"
+  else Ok (sqrt _x)

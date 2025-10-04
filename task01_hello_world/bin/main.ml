@@ -19,3 +19,7 @@
  *)
 
 (* TODO: Implement your solution below *)
+let () =
+  print_endline "Hello, World!";
+  let name = read_line () in
+  print_endline ("Hello, " ^ name ^ "!")

@@ -15,37 +15,22 @@
  *)
 
 (** Normal recursion factorial - NOT tail-recursive *)
-let fact _n =
-  failwith "TODO: Implement fact using 'let rec'"
-  (* Hints:
-   * - Use 'let rec fact n = ...' (add the 'rec' keyword)
-   * - Base case: if n <= 1 then return 1
-   * - Recursive case: n * fact (n - 1)
-   * - This is NOT tail-recursive (multiplication after recursive call)
-   *)
+let rec fact _n =
+  if _n <= 1 then 1 
+  else _n * fact (_n - 1)
 
 (** Tail-recursive factorial using an accumulator *)
-let fact_tail _n =
-  failwith "TODO: Implement fact_tail"
-  (* Hints:
-   * - Define a helper function: let rec loop i acc = ...
-   * - Base case: if i <= 1 then return acc
-   * - Recursive case: loop (i - 1) (acc * i)
-   * - Initial call: loop n 1
-   * - This IS tail-recursive (no pending operations after recursive call)
-   *)
+
+let rec _fact_tail _n acc = 
+  if _n <= 1 then acc
+  else _fact_tail (_n - 1) (acc * _n)
+
+let fact_tail _n = _fact_tail (_n) (1)
 
 (** Tail-recursive Fibonacci using two accumulators *)
 let fib _n =
-  failwith "TODO: Implement fib"
-  (* Hints:
-   * - Define a helper function: let rec loop i a b = ...
-   * - a represents F(i-2), b represents F(i-1)
-   * - Base cases: 
-   *     if i = 0 then return a
-   *     if i = 1 then return b
-   * - Recursive case: loop (i - 1) b (a + b)
-   * - Initial call: loop n 0 1
-   * - Each iteration: (a, b) becomes (b, a+b)
-   *)
-
+  let rec loop i a1 a2 =
+    if i == 0 then a1
+    else loop (i - 1) a2 (a1 + a2)
+  in
+  loop _n 0 1
