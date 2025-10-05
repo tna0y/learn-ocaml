@@ -42,6 +42,8 @@ type token =
     - [lex "(1)" = Ok [LPAREN; INT 1; RPAREN; EOF]]
     - [lex "abc" = Error "Invalid character 'a' at position 0"]
 *)
+val parse_ints : string -> char list -> (int * char list)
+
 val lex : string -> (token list, string) result
 
 (** {1 Parsing} *)
