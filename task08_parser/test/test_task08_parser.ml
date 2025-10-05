@@ -1,6 +1,6 @@
 (* Tests for Task 8: Recursive Descent Parser *)
 
-open Parser
+open Mparser
 
 (* ========== Lexer Tests ========== *)
 
