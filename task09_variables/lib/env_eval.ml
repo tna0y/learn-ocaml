@@ -28,41 +28,31 @@ type env = (string * int) list
 
 (** Look up a variable in the environment *)
 let lookup _x _env =
-  failwith "TODO: Implement lookup (use 'let rec')"
-  (* Hints:
-   * - Use 'let rec lookup x env = ...' (add the 'rec' keyword)
-   * - Use pattern matching on env
-   * - Base case: [] -> failwith ("Unbound variable: " ^ x)
-   * - Recursive case: (y, v) :: rest ->
-   *     if x = y then v
-   *     else lookup x rest
-   * - First match wins (handles shadowing)
-   *)
+  let rec loop _x _menv = match _menv with
+  | (k, v) :: xs -> if k = _x then v else loop _x xs
+  | [] -> failwith ("Unbound variable: " ^ _x)
+  in 
+  loop _x _env
 
 (** Evaluate an expression in an environment *)
-let eval _env _e =
-  failwith "TODO: Implement eval (use 'let rec')"
-  (* Hints:
-   * - Use 'let rec eval env e = ...' (add the 'rec' keyword)
-   * - Pattern match on e
-   * - Int n -> n
-   * - Add/Sub/Mul/Div: same as before, pass env to recursive calls
-   * - Var x -> lookup x env
-   * - Let (x, e1, e2) ->
-   *     let v1 = eval env e1 in  (* eval e1 in current env *)
-   *     let env' = (x, v1) :: env in  (* extend environment *)
-   *     eval env' e2  (* eval e2 in extended env *)
-   *)
+let rec eval _env = function
+| Int (n) -> n
+| Add (e1, e2) -> (eval _env e1) + (eval _env e2) 
+| Sub (e1, e2) -> (eval _env e1) - (eval _env e2) 
+| Mul (e1, e2) -> (eval _env e1) * (eval _env e2)
+| Div (e1, e2) -> (eval _env e1) / (eval _env e2) 
+| Var (key) -> lookup key _env
+| Let (key, val_expr, subst_expr) -> let nextenv = ((key, eval _env val_expr) :: _env) in eval nextenv subst_expr
+  
 
 (** Convert expression to string *)
-let expr_to_string _e =
-  failwith "TODO: Implement expr_to_string (use 'let rec')"
-  (* Hints:
-   * - Use 'let rec expr_to_string e = ...' (add the 'rec' keyword)
-   * - Similar to Task 7, but add cases for:
-   * - Var x -> x
-   * - Let (x, e1, e2) -> 
-   *     Printf.sprintf "let %s = %s in %s" 
-   *       x (expr_to_string e1) (expr_to_string e2)
-   *)
+let rec expr_to_string = function
+  | Int (n) -> string_of_int n
+  | Sub (e1, e2) -> "(" ^ (expr_to_string e1) ^ " - " ^ (expr_to_string e2) ^ ")" 
+  | Add (e1, e2) -> "(" ^ (expr_to_string e1) ^ " + " ^ (expr_to_string e2) ^ ")" 
+  | Mul (e1, e2) -> "(" ^ (expr_to_string e1) ^ " * " ^ (expr_to_string e2) ^ ")"
+  | Div (e1, e2) -> "(" ^ (expr_to_string e1) ^ " / " ^ (expr_to_string e2) ^ ")" 
+  | Var (key) -> key
+  | Let (key, val_expr, subst_expr) -> "let " ^ key ^ " = " ^ expr_to_string val_expr ^ " in " ^ expr_to_string subst_expr
+    
 

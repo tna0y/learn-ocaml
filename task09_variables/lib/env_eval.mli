@@ -31,7 +31,7 @@ type env = (string * int) list
     - [lookup "y" [("x", 5); ("y", 3)] = 3]
     - [lookup "x" [("y", 1); ("x", 5); ("x", 3)] = 5] (first match)
 *)
-val lookup : string -> env -> int
+val lookup : string -> env -> int 
 
 (** [eval env e] evaluates expression [e] in environment [env].
     

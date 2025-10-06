@@ -62,7 +62,7 @@ let test_eval_let_complex () =
   (* let x = 10 in let y = x + 5 in y * 2 *)
   let e = Let ("x", Int 10,
             Let ("y", Add (Var "x", Int 5),
-              Mul (Var "x", Int 2))) in
+              Mul (Var "y", Int 2))) in
   Alcotest.(check int) "complex let" 30 (eval [] e)
 
 let test_eval_let_scope () =
