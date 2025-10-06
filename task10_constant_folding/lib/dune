@@ -1,0 +1,3 @@
+(library
+ (name const_fold)
+ (public_name task10_constant_folding))

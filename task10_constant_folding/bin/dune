@@ -1,0 +1,4 @@
+(executable
+ (public_name task10_constant_folding)
+ (name main)
+ (libraries const_fold))

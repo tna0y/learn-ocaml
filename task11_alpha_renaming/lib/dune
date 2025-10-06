@@ -1,0 +1,3 @@
+(library
+ (name alpha_rename)
+ (public_name task11_alpha_renaming))
