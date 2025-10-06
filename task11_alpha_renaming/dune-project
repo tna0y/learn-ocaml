@@ -1,0 +1,29 @@
+(lang dune 3.20)
+
+(name task11_alpha_renaming)
+
+(generate_opam_files true)
+
+(source
+ (github username/reponame))
+
+(authors "Author Name <author@example.com>")
+
+(maintainers "Maintainer Name <maintainer@example.com>")
+
+(license LICENSE)
+
+(documentation https://url/to/documentation)
+
+(package
+ (name task11_alpha_renaming)
+ (synopsis "Task 11: Alpha-Renaming and Shadow Elimination")
+ (description "Learn to eliminate variable shadowing through alpha-renaming with fresh name generation")
+ (depends 
+  ocaml
+  dune
+  alcotest)
+ (tags
+  ("ocaml" "learning" "compiler" "ast" "renaming" "scoping")))
+
+; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html

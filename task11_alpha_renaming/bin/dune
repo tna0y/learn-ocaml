@@ -1,0 +1,4 @@
+(executable
+ (public_name task11_alpha_renaming)
+ (name main)
+ (libraries alpha_rename))
