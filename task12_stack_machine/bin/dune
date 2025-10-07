@@ -1,0 +1,4 @@
+(executable
+ (public_name task12_stack_machine)
+ (name main)
+ (libraries stack_compiler))

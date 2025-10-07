@@ -1,0 +1,3 @@
+(library
+ (name stack_compiler)
+ (public_name task12_stack_machine))
