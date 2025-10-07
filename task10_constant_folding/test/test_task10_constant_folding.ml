@@ -172,7 +172,7 @@ let test_semantic_equivalence () =
   ] in
   List.iter (fun e ->
     let e' = const_fold e in
-    check_equiv "semantic equivalence" e e'
+    check_equiv ("semantic equivalence " ^ (expr_to_string e) ^ " and " ^ (expr_to_string e')) e e'
   ) test_cases
 
 (* Test deep nesting *)

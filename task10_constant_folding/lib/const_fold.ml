@@ -26,8 +26,7 @@ type expr =
 type env = (string * int) list
 
 (** Constant folding and algebraic simplifications *)
-let const_fold _e =
-  failwith "TODO: Implement const_fold (use 'let rec')"
+let rec const_fold _e =
   (* Hints:
    * - Use 'let rec const_fold e = ...' (add the 'rec' keyword)
    * - Pattern match on e
@@ -64,6 +63,51 @@ let const_fold _e =
    * For Let:
    *   - Let (x, e1, e2) -> Let (x, const_fold e1, const_fold e2)
    *)
+   match _e with
+   | Add (e1, e2) -> (
+    let e1_cf = const_fold e1 in
+    let e2_cf = const_fold e2 in 
+    match (e1_cf, e2_cf) with  
+    | (Int a, Int b) -> Int (a + b)
+    | (Int 0, b) -> b
+    | (a, Int 0) -> a
+    | (a, b) -> Add (a, b)
+  )
+   | Sub (e1, e2) ->(
+    let e1_cf = const_fold e1 in
+    let e2_cf = const_fold e2 in 
+    match (e1_cf, e2_cf) with
+    | (Int 0, Int b) -> Int (-b)
+    | (a, Int 0) -> a
+    | (Int a, Int b) -> Int (a - b)
+    | (a, b) -> Sub (a, b)
+   )
+   | Mul (e1, e2) ->(
+    let e1_cf = const_fold e1 in
+    let e2_cf = const_fold e2 in 
+    match (e1_cf, e2_cf) with
+    | (Int a, Int b) -> Int (a * b)
+    | (Int 0, b) -> Int (0)
+    | (a, Int 0) -> Int (0)
+    | (a, Int 1) -> a
+    | (Int 1, b) -> b
+    | (a, b) -> Mul (a, b)
+   )
+   | Div (e1, e2) ->(
+    let e1_cf = const_fold e1 in
+    let e2_cf = const_fold e2 in 
+    match (e1_cf, e2_cf) with
+    | (Int a, Int b) -> Int (a / b)
+    | (Int 0, b) -> Int (0)
+    | (a, Int 0) -> failwith "zero division"
+    | (Int 1, b) -> b
+    | (a, Int 1) -> a
+    | (a, b) -> Mul (a, b)
+   )
+   | Let (x, e1, e2) -> Let (x, const_fold e1, const_fold e2)
+   | e -> e
+   
+   
 
 (** Helper: lookup variable in environment *)
 let rec lookup x = function
